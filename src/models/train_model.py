@@ -550,7 +550,7 @@ len(freq_feature)
 
 
 
-fearure_set_1 = basic_features
+feature_set_1 = basic_features
 feature_set_2 = list(dict.fromkeys(basic_features + sqaure_feature + pca_features))
 feature_set_3 = list(dict.fromkeys(feature_set_2 + time_feature))
 feature_set_4 = list(dict.fromkeys(feature_set_3 + freq_feature + cluster_feature))
@@ -600,7 +600,7 @@ plt.show()
 # --------------------------------------------------------------
 
 possible_feature_sets = [
-    fearure_set_1,
+    feature_set_1,
     feature_set_2,
     feature_set_3,
     feature_set_4,
@@ -629,19 +629,19 @@ for i, f in zip(range(len(possible_feature_sets)), feature_names):
     performance_test_rf = 0
 
     for it in range(0, iterations):
-        print("\tTraining neural network,", it)
-        (
-            class_train_y,
-            class_test_y,
-            class_train_prob_y,
-            class_test_prob_y,
-        ) = learner.feedforward_neural_network(
-            selected_train_X,
-            y_train,
-            selected_test_X,
-            gridsearch=False,
-        )
-        performance_test_nn += accuracy_score(y_test, class_test_y)
+        # print("\tTraining neural network,", it)
+        # (
+        #     class_train_y,
+        #     class_test_y,
+        #     class_train_prob_y,
+        #     class_test_prob_y,
+        # ) = learner.feedforward_neural_network(
+        #     selected_train_X,
+        #     y_train,
+        #     selected_test_X,
+        #     gridsearch=False,
+        # )
+        # performance_test_nn += accuracy_score(y_test, class_test_y)
 
         print("\tTraining random forest,", it)
         (
@@ -654,7 +654,7 @@ for i, f in zip(range(len(possible_feature_sets)), feature_names):
         )
         performance_test_rf += accuracy_score(y_test, class_test_y)
 
-    performance_test_nn = performance_test_nn / iterations
+    # performance_test_nn = performance_test_nn / iterations
     performance_test_rf = performance_test_rf / iterations
 
     # And we run our deterministic classifiers:
@@ -693,13 +693,13 @@ for i, f in zip(range(len(possible_feature_sets)), feature_names):
     performance_test_nb = accuracy_score(y_test, class_test_y)
 
     # Save results to dataframe
-    models = 
+    models = [ "RF", "KNN", "DT", "NB"]
     new_scores = pd.DataFrame(
         {
             "model": models,
             "feature_set": f,
             "accuracy": [
-                performance_test_nn,
+                
                 performance_test_rf,
                 performance_test_knn,
                 performance_test_dt,
@@ -731,7 +731,7 @@ plt.show()
     gridsearch=True
     )
 
-accuracy_score(y_test ,class_test_y) 
+accuracy=accuracy_score(y_test ,class_test_y) 
 
 classes =  class_test_prob_y.columns
 
@@ -740,7 +740,7 @@ cm = confusion_matrix(y_test ,class_test_y ,labels=classes)
 # create confusion matrix for cm
 plt.figure(figsize=(10, 10))
 plt.imshow(cm, interpolation="nearest", cmap=plt.cm.Blues)
-plt.title("Confusion matrix")
+plt.title("Confusion matrix for random forest")
 plt.colorbar()
 tick_marks = np.arange(len(classes))
 plt.xticks(tick_marks, classes, rotation=45)
@@ -779,9 +779,9 @@ X_test = X_test.drop('participant' ,axis = 1)
 # --------------------------------------------------------------
 
 
-(class_train_y, class_test_y, class_train_prob_y, class_test_prob_y,) = learner.random_forest( X_train[fearure_set_4], y_train, X_test[fearure_set_4], gridsearch=True)
+(class_train_y, class_test_y, class_train_prob_y, class_test_prob_y,) = learner.random_forest( X_train[feature_set_4], y_train, X_test[feature_set_4], gridsearch=True)
 
-accuracy_score(y_test ,class_test_y) 
+accuracy=accuracy_score(y_test ,class_test_y) 
 
 classes =  class_test_prob_y.columns
 
@@ -790,7 +790,7 @@ cm = confusion_matrix(y_test ,class_test_y ,labels=classes)
 # create confusion matrix for cm
 plt.figure(figsize=(10, 10))
 plt.imshow(cm, interpolation="nearest", cmap=plt.cm.Blues)
-plt.title("Confusion matrix")
+plt.title("Confusion matrix for RN  based on participant")
 plt.colorbar()
 tick_marks = np.arange(len(classes))
 plt.xticks(tick_marks, classes, rotation=45)
@@ -814,7 +814,7 @@ plt.show()
 # Try a simpler model with the selected features
 # --------------------------------------------------------------00000000000
 
-(class_train_y, class_test_y, class_train_prob_y, class_test_prob_y,) = learner.feedforward_neural_network( X_train[selected_features], y_train, X_test[selected_features], gridsearch=False)
+(class_train_y, class_test_y, class_train_prob_y, class_test_prob_y,) = learner.decision_tree( X_train[selected_features], y_train, X_test[selected_features], gridsearch=True)
 
 accuracy_score(y_test ,class_test_y) 
 
@@ -825,7 +825,7 @@ cm = confusion_matrix(y_test ,class_test_y ,labels=classes)
 # create confusion matrix for cm
 plt.figure(figsize=(10, 10))
 plt.imshow(cm, interpolation="nearest", cmap=plt.cm.Blues)
-plt.title("Confusion matrix")
+plt.title("Confusion matrix for Decision Tree")
 plt.colorbar()
 tick_marks = np.arange(len(classes))
 plt.xticks(tick_marks, classes, rotation=45)
